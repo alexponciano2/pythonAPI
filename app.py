@@ -14,14 +14,6 @@ with open('mobs.json', 'r') as file:
 def get_monsters():
     return jsonify({'monsters': monsters})
 
-# Rota para obter informações sobre um mob específico por id
-@app.route('/monsters/<int:monster_id>', methods=['GET'])
-def get_monster(monster_id):
-    monster = next((m for m in monsters if m['id'] == monster_id), None)
-    if monster:
-        return jsonify({'monster': monster})
-    return jsonify({'message': 'Mob não encontrado'}), 404
-
 
 # Rota para obter informações sobre um mob específico pelo level
 @app.route('/monsters/level/<int:monster_level>', methods=['GET'])
@@ -31,31 +23,3 @@ def get_monster_by_level(monster_level):
         return jsonify({'monsters': monsters_by_level})
     return jsonify({'message': 'Nenhum mob encontrado para o nível especificado'}), 404
 
-
-# Rota para adicionar um novo mob
-@app.route('/monsters', methods=['POST'])
-def add_monster():
-    new_monster = request.get_json()
-    new_monster['id'] = len(monsters) + 1
-    monsters.append(new_monster)
-    return jsonify({'message': 'Mob adicionado com sucesso'}), 201
-
-# Rota para atualizar informações de um mob
-@app.route('/monsters/<int:monster_id>', methods=['PUT'])
-def update_monster(monster_id):
-    monster = next((m for m in monsters if m['id'] == monster_id), None)
-    if monster:
-        updated_monster = request.get_json()
-        monster.update(updated_monster)
-        return jsonify({'message': 'Mob atualizado com sucesso'})
-    return jsonify({'message': 'Mob não encontrado'}), 404
-
-# Rota para excluir um mob
-@app.route('/monsters/<int:monster_id>', methods=['DELETE'])
-def delete_monster(monster_id):
-    global monsters
-    monsters = [m for m in monsters if m['id'] != monster_id]
-    return jsonify({'message': 'Mob excluído com sucesso'})
-
-if __name__ == '__main__':
-    app.run(debug=True)
