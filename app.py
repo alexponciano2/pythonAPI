@@ -1,12 +1,11 @@
 from flask import Flask, request, jsonify
+import json
 
 app = Flask(__name__)
 
-# Lista de monstros como um exemplo
-monsters = [
-    {"name": "Devil Shadow of Devah", "level": 1, "details": "Um monstro sombrio."},
-    {"name": "Dawn Shadow of Devah", "level": 2, "details": "Um monstro da alvorada."}
-]
+# Carregando a lista de monstros a partir do arquivo JSON
+with open('mobs.json', 'r') as file:
+    monsters = json.load(file)
 
 @app.route('/buscar_monstro', methods=['GET'])
 def buscar_monstro():
@@ -34,8 +33,6 @@ def buscar_monstro():
     else:
         return jsonify({"error": "Monstro não encontrado para o nível especificado"}), 404
 
-# if __name__ == '__main__':
-#     app.run(debug=True)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080)
